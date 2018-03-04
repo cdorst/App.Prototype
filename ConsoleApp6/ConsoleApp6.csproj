@@ -1,8 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <LangVersion>latest</LangVersion>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CDorst.Common.Functions.ClearDirectory" Version="2.0.0" />
+    <PackageReference Include="CDorst.Common.Functions.CreateNewArrayFromSingleElement" Version="1.0.0" />
+    <PackageReference Include="CDorst.DevOps.Primitives.SourceGraph" Version="5.0.0" />
+    <PackageReference Include="CDorst.DevOps.VersionControl.Functions.CheckIfGitHubRepositoryExists" Version="2.0.0" />
+    <PackageReference Include="CDorst.DevOps.VersionControl.Functions.CreateGitHubRepository" Version="2.0.0" />
+    <PackageReference Include="LibGit2Sharp" Version="0.25.0-preview-0073" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+  </ItemGroup>
 
 </Project>
