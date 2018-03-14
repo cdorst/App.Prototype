@@ -24,9 +24,17 @@ namespace ConsoleApp6
                 if (!anyChanges) anyChanges = true;
                 repo.Index.Add(relativePath);
                 var signature = new Signature(authorName, authorEmail, DateTimeOffset.Now);
-                repo.Commit(
-                    CommitMessage(update, fileName),
-                    signature, signature, new CommitOptions());
+                try
+                {
+                    repo.Commit(
+                        CommitMessage(update, fileName),
+                        signature, signature, new CommitOptions());
+                }
+                catch (EmptyCommitException)
+                {
+                    anyChanges = false;
+                    repo.Index.Remove(relativePath);
+                }
             }
             return anyChanges;
         }

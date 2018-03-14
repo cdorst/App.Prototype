@@ -9,10 +9,10 @@
   <ItemGroup>
     <PackageReference Include="CDorst.Common.Functions.ClearDirectory" Version="2.0.0" />
     <PackageReference Include="CDorst.Common.Functions.CreateNewArrayFromSingleElement" Version="1.0.0" />
-    <PackageReference Include="CDorst.DevOps.Primitives.SourceGraph" Version="5.0.0" />
+    <PackageReference Include="CDorst.DevOps.Primitives.SourceGraph" Version="8.0.6" />
     <PackageReference Include="CDorst.DevOps.VersionControl.Functions.CheckIfGitHubRepositoryExists" Version="2.0.0" />
     <PackageReference Include="CDorst.DevOps.VersionControl.Functions.CreateGitHubRepository" Version="2.0.0" />
-    <PackageReference Include="LibGit2Sharp" Version="0.25.0-preview-0073" />
+    <PackageReference Include="LibGit2Sharp" Version="0.25.0-preview-0081" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
   </ItemGroup>
 
