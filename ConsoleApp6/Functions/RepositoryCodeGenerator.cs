@@ -1,4 +1,5 @@
-﻿using DevOps.Primitives.SourceGraph;
+﻿using Common.EntityFrameworkServices;
+using DevOps.Primitives.SourceGraph;
 using System.Linq;
 using System.Threading.Tasks;
 using static Common.Functions.ClearDirectory.DirectoryClearer;
@@ -24,7 +25,7 @@ namespace ConsoleApp6
             var authorEmail = author.Email.Value;
             var authorName = author.Name.Value;
 
-            var isNewRepo = await CloneOrCreateGitHubRepository(password, accountName, repositoryName, repositoryDescription);
+            var isNewRepo = await CreateGitHubRepositoryIfNotExists(password, accountName, repositoryName, repositoryDescription);
             var repoDirectory = CloneOrInitGitRepository(accountName, repositoryName, isNewRepo);
             var anyChanges = CommitChanges(repository, authorEmail, authorName, repoDirectory);
             if (anyChanges) Push(repoDirectory, isNewRepo, accountName, password);
@@ -44,13 +45,6 @@ namespace ConsoleApp6
             return repoDirectory;
         }
 
-        private static async Task<bool> CloneOrCreateGitHubRepository(string password, string accountName, string repositoryName, string repositoryDescription)
-        {
-            var isNewRepo = !(await RepositoryExists(accountName, repositoryName));
-            if (isNewRepo) await CreateGitHubRepository(accountName, repositoryName, repositoryDescription, password);
-            return isNewRepo;
-        }
-
         private static string CloneOrInitGitRepository(string accountName, string repositoryName, bool isNewRepo)
         {
             var repoDirectory = CleanLocalDirectory();
@@ -63,9 +57,16 @@ namespace ConsoleApp6
         {
             var anyChanges = false;
             using (var repo = new LibGit2Sharp.Repository(repoDirectory))
-                foreach (var file in repository.RepositoryContent.RepositoryFileList.GetAssociations().Select(f => f.GetRecord()))
+                foreach (var file in repository.RepositoryContent.RepositoryFileList.GetRecords())
                     anyChanges = TryMakeCommit(authorEmail, authorName, repoDirectory, anyChanges, repo, file);
             return anyChanges;
+        }
+
+        private static async Task<bool> CreateGitHubRepositoryIfNotExists(string password, string accountName, string repositoryName, string repositoryDescription)
+        {
+            var isNewRepo = !(await RepositoryExists(accountName, repositoryName));
+            if (isNewRepo) await CreateGitHubRepository(accountName, repositoryName, repositoryDescription, password);
+            return isNewRepo;
         }
     }
 }

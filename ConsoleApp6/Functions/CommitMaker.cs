@@ -21,7 +21,6 @@ namespace ConsoleApp6
             var update = WriteFile(repoDirectory, file.Content.Value, relativeDirectory, relativePath);
             if (repo.RetrieveStatus().IsDirty)
             {
-                if (!anyChanges) anyChanges = true;
                 repo.Index.Add(relativePath);
                 var signature = new Signature(authorName, authorEmail, DateTimeOffset.Now);
                 try
@@ -29,10 +28,10 @@ namespace ConsoleApp6
                     repo.Commit(
                         CommitMessage(update, fileName),
                         signature, signature, new CommitOptions());
+                    if (!anyChanges) anyChanges = true;
                 }
                 catch (EmptyCommitException)
                 {
-                    anyChanges = false;
                     repo.Index.Remove(relativePath);
                 }
             }
