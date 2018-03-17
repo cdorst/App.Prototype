@@ -142,8 +142,7 @@ namespace ConsoleApp6
                 "TableReferenceGetterOrCreator",
                 "Function returns a reference of a new or existing Microsoft Azure CloudTable using the given connection string and table name",
                 Dependencies(Package(nameof(Cloud_Azure_Storage_Table_Functions_GetTableReference))),
-                environmentVariables: new Dictionary<string, string>(Array(new KeyValuePair<string, string>(
-                    "AZURE_STORAGE_CONNECTION_STRING", "Connection string to your Azure Storage instance"))),
+                environmentVariables: null,
                 @static: true,
                 UsingDirectiveLists.Create(
                     UsingDirectives.Using("Microsoft.Azure"),

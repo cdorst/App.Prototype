@@ -9,13 +9,14 @@ namespace ConsoleApp6.Templates
     public class CSharpClass : CSharpType
     {
         public CSharpClass() { }
-        public CSharpClass(string @namespace, string typeName, string description, string version, bool isStatic, List<EnvironmentVariable> environmentVariables, List<PackageReference> externalDependencies, IEnumerable<string> sameAccountDependencies, List<CSharpTypeMembers.Attribute> attributes, List<Base> bases, List<ConstraintClause> constraintClauses, List<Method> methods, List<Property> properties, List<string> typeParameters, List<string> usingDirectives, List<string> usingStaticDirectives) : base(@namespace, typeName, description, version, environmentVariables, externalDependencies, sameAccountDependencies, attributes, bases, constraintClauses, methods, properties, typeParameters, usingDirectives, usingStaticDirectives)
+        public CSharpClass(string @namespace, string typeName, string description, string version, bool isStatic = true, List<EnvironmentVariable> environmentVariables = null, List<PackageReference> externalDependencies = null, IEnumerable<string> sameAccountDependencies = null, List<CSharpTypeMembers.Attribute> attributes = null, List<Base> bases = null, List<Constructor> constructors = null, List<Field> fields = null, List<ConstraintClause> constraintClauses = null, List<Method> methods = null, List<Property> properties = null, List<string> typeParameters = null, List<string> usingDirectives = null, List<string> usingStaticDirectives = null, List<string> finalizerBlock = null) : base(@namespace, typeName, description, version, environmentVariables, externalDependencies, sameAccountDependencies, attributes, bases, constraintClauses, methods, properties, typeParameters, usingDirectives, usingStaticDirectives, constructors, fields)
         {
+            FinalizerBlock = finalizerBlock;
             IsStatic = isStatic;
         }
 
-        public bool IsStatic { get; set; }
         public List<string> FinalizerBlock { get; set; }
+        public bool IsStatic { get; set; }
 
         public override Func<IDictionary<string, ITemplate>, TemplateContent> GetContent()
             => repositories

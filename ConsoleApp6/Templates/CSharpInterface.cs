@@ -9,7 +9,7 @@ namespace ConsoleApp6.Templates
     public class CSharpInterface : CSharpType
     {
         public CSharpInterface() { }
-        public CSharpInterface(string @namespace, string typeName, string description, string version, List<PackageReference> externalDependencies, IEnumerable<string> sameAccountDependencies, List<CSharpTypeMembers.Attribute> attributes, List<Base> bases, List<ConstraintClause> constraintClauses, List<Method> methods, List<Property> properties, List<string> typeParameters, List<string> usingDirectives) : base(@namespace, typeName, description, version, null, externalDependencies, sameAccountDependencies, attributes, bases, constraintClauses, methods, properties, typeParameters, usingDirectives, null)
+        public CSharpInterface(string @namespace, string typeName, string description, string version, List<PackageReference> externalDependencies = null, IEnumerable<string> sameAccountDependencies = null, List<CSharpTypeMembers.Attribute> attributes = null, List<Base> bases = null, List<ConstraintClause> constraintClauses = null, List<Method> methods = null, List<Property> properties = null, List<string> typeParameters = null, List<string> usingDirectives = null) : base(@namespace, typeName, description, version, null, externalDependencies, sameAccountDependencies, attributes, bases, constraintClauses, methods, properties, typeParameters, usingDirectives, null)
         {
         }
 
