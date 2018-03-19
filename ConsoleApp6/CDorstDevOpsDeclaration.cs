@@ -9,6 +9,6 @@ namespace ConsoleApp6
             => new DevOpsDeclaration(
                 GetEnvironmentVariable("APPVEYOR_API_TOKEN"),
                 GetEnvironmentVariable("GITHUB_API_PERSONAL_ACCESS_TOKEN"),
-                new CDorstProject().AddRepositories());
+                new CDorstProject());
     }
 }

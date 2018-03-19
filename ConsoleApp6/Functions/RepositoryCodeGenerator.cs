@@ -1,6 +1,5 @@
 ﻿using Common.EntityFrameworkServices;
 using DevOps.Primitives.SourceGraph;
-using System.Linq;
 using System.Threading.Tasks;
 using static Common.Functions.ClearDirectory.DirectoryClearer;
 using static ConsoleApp6.AppveyorBuildAdder;

@@ -9,7 +9,7 @@ namespace ConsoleApp6.Declarations
     public class AccountDeclaration
     {
         public AccountDeclaration() { }
-        public AccountDeclaration(string accountName, string appveyorAzureStorageSecret, string authorEmail, string authorFullName, string copyright, string packageCacheUri, string packageIconUri, string namespacePrefix, List<Code> code, List<Entity> entities, List<Metapackage> metapackages)
+        public AccountDeclaration(string accountName, string appveyorAzureStorageSecret, string authorEmail, string authorFullName, string copyright, string packageCacheUri, string packageIconUri, string namespacePrefix, List<Code> code, List<Metapackage> metapackages)
         {
             AccountName = accountName;
             AppveyorAzureStorageSecret = appveyorAzureStorageSecret;
@@ -17,13 +17,12 @@ namespace ConsoleApp6.Declarations
             AuthorFullName = authorFullName;
             Code = code;
             Copyright = copyright;
-            Entities = entities;
             Metapackages = metapackages;
             NamespacePrefix = namespacePrefix;
             PackageCacheUrl = packageCacheUri;
             PackageIconUrl = packageIconUri;
         }
-        public AccountDeclaration(string namespacePrefix, string authorFullName, string authorEmail, string appveyorAzureStorageSecret, List<Code> code, List<Entity> entities, List<Metapackage> metapackages)
+        public AccountDeclaration(string namespacePrefix, string authorFullName, string authorEmail, string appveyorAzureStorageSecret, List<Code> code, List<Metapackage> metapackages)
             : this(
                   namespacePrefix.ToLower(),
                   appveyorAzureStorageSecret,
@@ -34,7 +33,6 @@ namespace ConsoleApp6.Declarations
                   $"https://{namespacePrefix.ToLower()}-dev.azureedge.net/nuget/package-icon-64.png",
                   namespacePrefix,
                   code,
-                  entities,
                   metapackages)
         {
         }
@@ -49,14 +47,13 @@ namespace ConsoleApp6.Declarations
         public string PackageIconUrl { get; set; }
 
         public List<Code> Code { get; set; }
-        public List<Entity> Entities { get; set; }
         public List<Metapackage> Metapackages { get; set; }
 
         public GitHubAccount GenerateAccount()
             => GitHub(
                 new GitHubAccountSpecification(AccountName, AppveyorAzureStorageSecret, AuthorEmail, AuthorFullName, Copyright, PackageCacheUrl, PackageIconUrl, NamespacePrefix),
                 Code,
-                Entities,
+                entities: null,
                 Metapackages);
     }
 }

@@ -12,22 +12,22 @@ namespace ConsoleApp6
 {
     public static class CDorstProjectExtensions
     {
-        private const string UnifiedVersion = "2.0.1";
+        private const string UnifiedVersion = "2.0.2";
 
         public static Project AddRepositories(this Project project)
             => project
-                .Cloud_Azure_Storage_Connection_Functions_GetCloudStorageAccount()
-                .Cloud_Azure_Storage_Connection_Functions_GetConnectionString()
-                .Cloud_Azure_Storage_Connection_Metapackages_ConfigurationManager()
-                .Cloud_Azure_Storage_Table_Functions_GetAzureTable()
-                .Cloud_Azure_Storage_Table_Functions_GetOrCreateTableReference()
-                .Cloud_Azure_Storage_Table_Functions_GetTableClient()
-                .Cloud_Azure_Storage_Table_Functions_GetTableReference()
-                .DevOps_Build_AppVeyor_AzureTableStorageLedger()
-                .DevOps_Build_AppVeyor_AzureTableStorageLedger_Builder()
-                .DevOps_Build_AppVeyor_Functions_AddBuild()
-                .DevOps_Build_AppVeyor_Functions_GetAzureTable()
-                .DevOps_Build_AppVeyor_Functions_GetBuildDependencyString()
+                //.Cloud_Azure_Storage_Connection_Functions_GetCloudStorageAccount()
+                //.Cloud_Azure_Storage_Connection_Functions_GetConnectionString()
+                //.Cloud_Azure_Storage_Connection_Metapackages_ConfigurationManager()
+                //.Cloud_Azure_Storage_Table_Functions_GetAzureTable()
+                //.Cloud_Azure_Storage_Table_Functions_GetOrCreateTableReference()
+                //.Cloud_Azure_Storage_Table_Functions_GetTableClient()
+                //.Cloud_Azure_Storage_Table_Functions_GetTableReference()
+                //.DevOps_Build_AppVeyor_AzureTableStorageLedger()
+                //.DevOps_Build_AppVeyor_AzureTableStorageLedger_Builder()
+                //.DevOps_Build_AppVeyor_Functions_AddBuild()
+                //.DevOps_Build_AppVeyor_Functions_GetAzureTable()
+                //.DevOps_Build_AppVeyor_Functions_GetBuildDependencyString()
                 .DevOps_Code_EntityModel_Common_Metapackages_EntityFrameworkCore()
                 .DevOps_Code_EntityModel_Common_Interfaces_Entity()
                 .DevOps_Code_EntityModel_Common_Interfaces_StaticEntity()
