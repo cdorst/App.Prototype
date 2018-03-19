@@ -46,6 +46,6 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations
         public List<string> UsingStaticDirectives { get; set; }
 
         public RepositoryDeclaration GetDeclaration()
-            => new CSharpClass(Name, TypeName, Description, Version, isStatic: false, EnvironmentVariables, PackageReferences, SameAccountDependencies.ToArray(), Attributes, Bases, Constructors, Fields, ConstraintClauses, Methods, Properties, TypeParameters, UsingDirectives, UsingStaticDirectives, FinalizerBlock);
+            => new CSharpClass(Name, TypeName, Description, Version, isStatic: false, EnvironmentVariables, PackageReferences, SameAccountDependencies?.ToArray(), Attributes, Bases, Constructors, Fields, ConstraintClauses, Methods, Properties, TypeParameters, UsingDirectives, UsingStaticDirectives, FinalizerBlock);
     }
 }

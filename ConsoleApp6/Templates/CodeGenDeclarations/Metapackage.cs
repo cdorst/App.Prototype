@@ -25,6 +25,6 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations
         public string Version { get; set; }
 
         public RepositoryDeclaration GetDeclaration()
-            => new NuGetMetapackage(Name, Description, Version, EnvironmentVariables, PackageReferences, SameAccountDependencies.ToArray());
+            => new NuGetMetapackage(Name, Description, Version, EnvironmentVariables, PackageReferences, SameAccountDependencies?.ToArray());
     }
 }

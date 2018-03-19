@@ -58,7 +58,7 @@ namespace ConsoleApp6.Templates
         protected ConstructorList GetConstructorList()
             => !Any(Constructors) ? null
                 : new ConstructorList(
-                    Constructors.Select(constructor => new ConstructorListAssociation(new DevOps.Primitives.CSharp.Constructor(TypeName, GetBlock(constructor.Block), GetMemberModifierList(constructor.Modifiers), GetParameterList(constructor.Parameters), string.IsNullOrWhiteSpace(constructor.Comment) ? null : Comments.Summary(constructor.Comment), GetAttributeListCollection(constructor.Attributes), !Any(constructor.ConstructorBaseInitializer?.Arguments) ? null : new DevOps.Primitives.CSharp.ConstructorBaseInitializer(new ArgumentList(
+                    Constructors.Select(constructor => new ConstructorListAssociation(new DevOps.Primitives.CSharp.Constructor(TypeName, GetBlock(constructor.Block) ?? Blocks.Empty, GetMemberModifierList(constructor.Modifiers), GetParameterList(constructor.Parameters), string.IsNullOrWhiteSpace(constructor.Comment) ? null : Comments.Summary(constructor.Comment), GetAttributeListCollection(constructor.Attributes), !Any(constructor.ConstructorBaseInitializer?.Arguments) ? null : new DevOps.Primitives.CSharp.ConstructorBaseInitializer(new ArgumentList(
                         constructor.ConstructorBaseInitializer.Arguments.Select(argument => new ArgumentListAssociation(argument)).ToList()), (constructor.ConstructorBaseInitializer.UseThisKeyword == true) ?  SyntaxKind.ThisConstructorInitializer : SyntaxKind.BaseConstructorInitializer)))).ToList());
 
         protected FieldList GetFieldList()
@@ -99,7 +99,7 @@ namespace ConsoleApp6.Templates
                 : null;
 
         private static Block GetBlock(List<string> statements)
-            => !Any(statements) ? Blocks.Empty
+            => !Any(statements) ? null
                 : Blocks.Create(statements.ToArray());
 
         private static AttributeListCollection GetMemberAttributeList(List<CSharpTypeMembers.Attribute> attributes)
@@ -111,7 +111,7 @@ namespace ConsoleApp6.Templates
 
         private static ModifierList GetMemberModifierList(string modifiers)
             => string.IsNullOrWhiteSpace(modifiers)
-                ? ModifierLists.Public
+                ? null
                 : GetModifierList(modifiers);
 
         private static ModifierList GetModifierList(string modifiers)

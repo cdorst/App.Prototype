@@ -39,12 +39,10 @@ namespace ConsoleApp6.Declarations
             Func<string, List<NuGetReference>, KeyValuePair<string, IEnumerable<string>>> genericSelector = (name, dependencies)
                 => new KeyValuePair<string, IEnumerable<string>>($"{prefix}{name}", dependencies?.Select(selector).Where(filter) ?? _empty);
             Func<Code, KeyValuePair<string, IEnumerable<string>>> codeSelector = repo => genericSelector(repo.ProjectName, repo.Dependencies);
-            Func<Entity, KeyValuePair<string, IEnumerable<string>>> entitySelector = repo => genericSelector(repo.ProjectName, repo.Dependencies);
             Func<Metapackage, KeyValuePair<string, IEnumerable<string>>> metapackageSelector = repo => genericSelector(repo.ProjectName, repo.Dependencies);
             var code = account.Code?.Select(codeSelector) ?? _emptyPairs;
-            var entities = account.Entities?.Select(entitySelector) ?? _emptyPairs;
             var metapackages = account.Metapackages?.Select(metapackageSelector) ?? _emptyPairs;
-            return new Dictionary<string, IEnumerable<string>>(code.Concat(entities).Concat(metapackages));
+            return new Dictionary<string, IEnumerable<string>>(code.Concat(metapackages));
         }
 
         private static List<Repository> ChangeReadmeFiles(string prefix, Dictionary<string, IEnumerable<string>> dictionary, GitHubAccount declaration)

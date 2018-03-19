@@ -43,6 +43,6 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations
             => $"I{Name.Split('.').Last()}";
 
         public RepositoryDeclaration GetDeclaration()
-            => new CSharpInterface(Name, GetTypeName(), Description, Version, PackageReferences, SameAccountDependencies.ToArray(), Attributes, Bases, ConstraintClauses, Methods, Properties, TypeParameters, UsingDirectives);
+            => new CSharpInterface(Name, GetTypeName(), Description, Version, PackageReferences, SameAccountDependencies?.ToArray(), Attributes, Bases, ConstraintClauses, Methods, Properties, TypeParameters, UsingDirectives);
     }
 }

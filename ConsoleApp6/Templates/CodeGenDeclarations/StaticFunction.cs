@@ -55,6 +55,6 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations
                 .GetVerb(); // => "Doer"
 
         public RepositoryDeclaration GetDeclaration()
-            => new CSharpClass(Name, GetTypeName(), Description, Version, isStatic: true, EnvironmentVariables, PackageReferences, SameAccountDependencies.ToArray(), Attributes, Bases, Constructors, Fields, ConstraintClauses, Methods, Properties, TypeParameters, UsingDirectives, UsingStaticDirectives, FinalizerBlock);
+            => new CSharpClass(Name, GetTypeName(), Description, Version, isStatic: true, EnvironmentVariables, PackageReferences, SameAccountDependencies?.ToArray(), Attributes, Bases, Constructors, Fields, ConstraintClauses, Methods, Properties, TypeParameters, UsingDirectives, UsingStaticDirectives, FinalizerBlock);
     }
 }
