@@ -4,7 +4,7 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations
 {
     internal static class AgentNounsHelper
     {
-        private static HashSet<string> Suffixes = new HashSet<string>
+        private static readonly HashSet<string> Suffixes = new HashSet<string>
         {
             "er",
             "ar",

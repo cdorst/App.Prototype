@@ -1,8 +1,8 @@
 ﻿namespace ConsoleApp6.Declarations
 {
-    public class CDorstProject : Project
+    public class CDorstAccount : Account
     {
-        public CDorstProject()
+        public CDorstAccount()
             : base(
                   "CDorst",
                   "chris@dorst.email",

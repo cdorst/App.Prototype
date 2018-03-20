@@ -2,9 +2,13 @@
 {
     public static class CommitMessageWriter
     {
+        private const string Add = nameof(Add);
+        private const string Update = nameof(Update);
+
         public static string CommitMessage(bool update, string fileName)
-            => update
-                ? $"Update {fileName}"
-                : $"Add {fileName}";
+            => $"{GetPrefix(update)} {fileName}";
+
+        private static string GetPrefix(bool update)
+            => update ? Update : Add;
     }
 }

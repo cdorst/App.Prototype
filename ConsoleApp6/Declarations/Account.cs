@@ -2,6 +2,7 @@
 using DevOps.Primitives.SourceGraph.Helpers.Consolidated;
 using System.Collections.Generic;
 using System.Linq;
+using static ConsoleApp6.Declarations.ProjectIndexRepositoryAdder;
 
 namespace ConsoleApp6.Declarations
 {
@@ -29,11 +30,14 @@ namespace ConsoleApp6.Declarations
         public List<Code> Code { get; set; }
         public List<Metapackage> Metapackages { get; set; }
 
+        public GitHubAccount GenerateAccount()
+            => GetAccountDeclaration().GenerateAccount();
+
         public AccountDeclaration GetAccountDeclaration()
             => new AccountDeclaration(AccountName, AuthorFullName, AuthorEmail, AppveyorAzureStorageSecret, Code, Metapackages);
 
-        public GitHubAccount GenerateAccount()
-            => GetAccountDeclaration().GenerateAccount();
+        public GitHubAccount GetGitHubAccountDeclaration()
+            => AddProjectIndexRepository(this);
 
         public Account WithCode(Code code)
         {

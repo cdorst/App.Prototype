@@ -53,7 +53,6 @@ namespace ConsoleApp6.Declarations
             => GitHub(
                 new GitHubAccountSpecification(AccountName, AppveyorAzureStorageSecret, AuthorEmail, AuthorFullName, Copyright, PackageCacheUrl, PackageIconUrl, NamespacePrefix),
                 Code,
-                entities: null,
                 Metapackages);
     }
 }

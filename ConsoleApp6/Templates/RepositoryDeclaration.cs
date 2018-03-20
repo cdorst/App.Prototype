@@ -29,25 +29,26 @@ namespace ConsoleApp6.Templates
         public IEnumerable<string> SameAccountDependencies { get; set; }
         public string Version { get; set; }
 
-        public abstract Func<IDictionary<string, ITemplate>, TemplateContent> GetContent();
+        public abstract Func<string, IDictionary<string, ITemplate>, TemplateContent> GetContent();
 
         protected IDictionary<string, string> GetEnvironmentVariables()
             => !Any(EnvironmentVariables) ? null
                 : new Dictionary<string, string>(EnvironmentVariables.Select(each => new KeyValuePair<string, string>(each.Name, each.Description)));
 
-        protected List<NuGetReference> GetPackages(IDictionary<string, ITemplate> repositories)
+        protected List<NuGetReference> GetPackages(IDictionary<string, ITemplate> repositories, string prefix = null)
             => GetExternalPackages()
-                .Concat(GetInternalPackages(repositories))
+                .Concat(GetInternalPackages(repositories, prefix))
                 .ToList();
 
         private IEnumerable<NuGetReference> GetExternalPackages()
              => ExternalDependencies?.Select(each
                  => new NuGetReference(each.Name, each.Version)) ?? Empty;
 
-        private IEnumerable<NuGetReference> GetInternalPackages(IDictionary<string, ITemplate> repositories)
+        private IEnumerable<NuGetReference> GetInternalPackages(IDictionary<string, ITemplate> repositories, string prefix)
         {
+            if (!string.IsNullOrWhiteSpace(prefix) && !prefix.EndsWith('.')) prefix = $"{prefix}.";
             foreach (var dependency in SameAccountDependencies ?? new string[] { })
-                yield return new NuGetReference(dependency,
+                yield return new NuGetReference($"{prefix}{dependency}",
                     repositories.ContainsKey(dependency)
                         ? repositories[dependency].Version
                         : "1.0.0");

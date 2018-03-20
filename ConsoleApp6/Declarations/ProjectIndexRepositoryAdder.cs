@@ -21,10 +21,11 @@ namespace ConsoleApp6.Declarations
         {
             var prefix = $"{account.AccountName}.";
             var dictionary = BuildDependencyDictionary(account, prefix);
+            var dependents = InvertDependencyDictionary(dictionary, prefix);
             // Get declaration
             var declaration = account.GenerateAccount();
             // Overwrite READMEs to add "Dependents" section
-            var modified = ChangeReadmeFiles(prefix, dictionary, declaration);
+            var modified = ChangeReadmeFiles(prefix, dependents, declaration);
             // Add Project.Index repository
             modified.Add(ProjectIndexRepository(dictionary));
             // Package & ship declaration object
@@ -45,24 +46,36 @@ namespace ConsoleApp6.Declarations
             return new Dictionary<string, IEnumerable<string>>(code.Concat(metapackages));
         }
 
-        private static List<Repository> ChangeReadmeFiles(string prefix, Dictionary<string, IEnumerable<string>> dictionary, GitHubAccount declaration)
+        private static IEnumerable<KeyValuePair<string, string>> InvertDependencyDictionary(Dictionary<string, IEnumerable<string>> dependencyDictionary, string prefix)
+        {
+            foreach (var repository in dependencyDictionary)
+            {
+                var repositoryName = repository.Key;
+                var dependencies = repository.Value;
+
+                foreach (var dependency in dependencies ?? new string[] { })
+                {
+                    if (dependency.StartsWith(prefix))
+                        yield return new KeyValuePair<string, string>(dependency, repositoryName);
+                }
+            }
+        }
+
+        private static List<Repository> ChangeReadmeFiles(string prefix, IEnumerable<KeyValuePair<string, string>> dependents, GitHubAccount declaration)
         {
             var repositories = new List<Repository>();
             foreach (var repository in declaration.RepositoryList.GetRecords())
             {
                 var repositoryName = repository.GetName();
                 var repositoryKey = $"{prefix}{repositoryName}";
-                if (dictionary.ContainsKey(repositoryKey))
+                var dependentList = dependents.Where(each => each.Key == repositoryKey).Select(each => each.Value);
+                if (Any(dependentList))
                 {
                     var content = repository.RepositoryContent;
-                    var dependents = dictionary[repositoryKey];
-                    if (Any(dependents))
-                    {
-                        var fileList = new List<RepositoryFile>();
-                        var files = content.RepositoryFileList.GetRecords();
-                        foreach (var file in files) fileList.Add(EditReadmeFile(prefix, dependents, file));
-                        content.RepositoryFileList = new RepositoryFileList(fileList.ToArray());
-                    }
+                    var fileList = new List<RepositoryFile>();
+                    var files = content.RepositoryFileList.GetRecords();
+                    foreach (var file in files) fileList.Add(EditReadmeFile(prefix, dependentList, file));
+                    content.RepositoryFileList = new RepositoryFileList(fileList.ToArray());
                     repository.RepositoryContent = content;
                 }
                 repositories.Add(repository);

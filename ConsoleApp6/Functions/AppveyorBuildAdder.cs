@@ -6,11 +6,14 @@ namespace ConsoleApp6
 {
     internal static class AppveyorBuildAdder
     {
+        private const string builds = nameof(builds);
+        private const string projects = nameof(projects);
+
         public static async Task AddAppveyorBuild(string token, string account, string repository)
         {
             account = account.ToLower();
-            var response = await PostJson(GetAppveyorUri("projects"), token, GetAppveyorAddBuildJson(account, repository));
-            await PostJson(GetAppveyorUri("builds"), token, GetAppveyorQueueBuildJson(account, response), true);
+            var response = await PostJson(GetAppveyorUri(projects), token, GetAppveyorAddBuildJson(account, repository));
+            await PostJson(GetAppveyorUri(builds), token, GetAppveyorQueueBuildJson(account, response), true);
         }
 
         private static string GetAppveyorAddBuildJson(string account, string repository)

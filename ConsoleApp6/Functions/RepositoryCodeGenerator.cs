@@ -14,6 +14,8 @@ namespace ConsoleApp6
 {
     public static class RepositoryCodeGenerator
     {
+        private const string ProjectIndex = "Project.Index";
+
         public static async Task CommitChanges(GitHubAccountSettings account, Repository repository, string password, string appveyorToken)
         {
             var accountName = account.AccountName.Value;
@@ -33,7 +35,7 @@ namespace ConsoleApp6
 
         private static async Task AddBuildForNewProjects(string appveyorToken, string accountName, string repositoryName, bool isNewRepo)
         {
-            if (isNewRepo && repositoryName != "Project.Index")
+            if (isNewRepo && repositoryName != ProjectIndex)
                 await AddAppveyorBuild(appveyorToken, accountName, repositoryName);
         }
 

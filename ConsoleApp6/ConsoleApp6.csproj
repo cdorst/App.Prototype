@@ -9,18 +9,13 @@
   <ItemGroup>
     <PackageReference Include="CDorst.Common.Functions.ClearDirectory" Version="2.0.0" />
     <PackageReference Include="CDorst.Common.Functions.CreateNewArrayFromSingleElement" Version="1.0.0" />
-    <PackageReference Include="CDorst.DevOps.Primitives.SourceGraph" Version="8.0.29" />
+    <PackageReference Include="CDorst.DevOps.Primitives.SourceGraph" Version="9.0.3" />
     <PackageReference Include="CDorst.DevOps.VersionControl.Functions.CheckIfGitHubRepositoryExists" Version="2.0.0" />
     <PackageReference Include="CDorst.DevOps.VersionControl.Functions.CreateGitHubRepository" Version="2.0.0" />
+    <PackageReference Include="Humanizer.Core" Version="2.2.0" />
     <PackageReference Include="LibGit2Sharp" Version="0.25.0-preview-0081" />
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="cdorst-declaration.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

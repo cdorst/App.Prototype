@@ -5,7 +5,6 @@ using static DevOps.Primitives.SourceGraph.Helpers.Consolidated.Builders.Metapac
 
 namespace ConsoleApp6.Templates
 {
-
     public class NuGetMetapackage : RepositoryDeclaration
     {
         public NuGetMetapackage() { }
@@ -13,9 +12,9 @@ namespace ConsoleApp6.Templates
         {
         }
 
-        public override Func<IDictionary<string, ITemplate>, TemplateContent> GetContent()
-            => repositories
+        public override Func<string, IDictionary<string, ITemplate>, TemplateContent> GetContent()
+            => (accountName, repositories)
                 => new TemplateContent(Metapackage(
-                    Name, Description, Version, GetPackages(repositories), GetEnvironmentVariables()));
+                    Name, Description, Version, GetPackages(repositories, accountName), GetEnvironmentVariables()));
     }
 }

@@ -5,15 +5,15 @@ namespace ConsoleApp6
     public class DevOpsDeclaration
     {
         public DevOpsDeclaration() { }
-        public DevOpsDeclaration(string appveyorSecret, string gitHubSecret, Project project)
+        public DevOpsDeclaration(string appveyorSecret, string gitHubSecret, Account account)
         {
+            Account = account;
             AppveyorSecret = appveyorSecret;
             GitHubSecret = gitHubSecret;
-            Project = project;
         }
 
+        public Account Account { get; set; }
         public string AppveyorSecret { get; set; }
         public string GitHubSecret { get; set; }
-        public Project Project { get; set; }
     }
 }

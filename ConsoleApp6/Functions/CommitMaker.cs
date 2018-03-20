@@ -11,6 +11,8 @@ namespace ConsoleApp6
 {
     public static class CommitMaker
     {
+        private static readonly CommitOptions _commitOptions = new CommitOptions();
+
         public static bool TryMakeCommit(string authorEmail, string authorName, string repoDirectory, bool anyChanges, LibGit2Sharp.Repository repo, RepositoryFile file)
         {
             var fileNameSettings = file.FileName;
@@ -22,12 +24,10 @@ namespace ConsoleApp6
             if (repo.RetrieveStatus().IsDirty)
             {
                 repo.Index.Add(relativePath);
-                var signature = new Signature(authorName, authorEmail, DateTimeOffset.Now);
+                var signature = GetSignature(authorEmail, authorName);
                 try
                 {
-                    repo.Commit(
-                        CommitMessage(update, fileName),
-                        signature, signature, new CommitOptions());
+                    MakeCommit(repo, fileName, update, signature);
                     if (!anyChanges) anyChanges = true;
                 }
                 catch (EmptyCommitException)
@@ -37,5 +37,11 @@ namespace ConsoleApp6
             }
             return anyChanges;
         }
+
+        private static Signature GetSignature(string authorEmail, string authorName)
+            => new Signature(authorName, authorEmail, DateTimeOffset.Now);
+
+        private static void MakeCommit(LibGit2Sharp.Repository repo, string fileName, bool update, Signature signature)
+            => repo.Commit(CommitMessage(update, fileName), signature, signature, _commitOptions);
     }
 }

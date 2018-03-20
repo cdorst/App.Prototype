@@ -18,9 +18,9 @@ namespace ConsoleApp6.Templates
         public List<string> FinalizerBlock { get; set; }
         public bool IsStatic { get; set; }
 
-        public override Func<IDictionary<string, ITemplate>, TemplateContent> GetContent()
-            => repositories
+        public override Func<string, IDictionary<string, ITemplate>, TemplateContent> GetContent()
+            => (accountName, repositories)
                 => new TemplateContent(Class(
-                    Name, Description, Version, GetPackages(repositories), TypeName, GetEnvironmentVariables(), IsStatic, GetUsingDirectiveList(), Comments.Summary(Description), GetAttributeListCollection(), GetTypeParameterList(), GetConstraintClauseList(), GetBaseList(), GetConstructorList(), GetFieldList(), GetMethodList(), GetPropertyList(), GetFinalizer(FinalizerBlock)));
+                    Name, Description, Version, GetPackages(repositories, accountName), TypeName, GetEnvironmentVariables(), IsStatic, GetUsingDirectiveList(), Comments.Summary(Description), GetAttributeListCollection(), GetTypeParameterList(), GetConstraintClauseList(), GetBaseList(), GetConstructorList(), GetFieldList(), GetMethodList(), GetPropertyList(), GetFinalizer(FinalizerBlock)));
     }
 }

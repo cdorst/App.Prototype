@@ -1,6 +1,7 @@
 ﻿using Common.EntityFrameworkServices;
 using ConsoleApp6.Templates;
 using ConsoleApp6.Templates.CodeGenDeclarations;
+using ConsoleApp6.Templates.Implementation;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,55 +14,27 @@ namespace ConsoleApp6
 {
     public static class Program
     {
+        private static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
+        {
+            Formatting = Formatting.Indented,
+            NullValueHandling = NullValueHandling.Ignore,
+            TypeNameHandling = TypeNameHandling.Auto
+        };
+
         public static async Task Main(string[] args)
         {
+            var path = args?.FirstOrDefault() ?? Path.Combine(CurrentDirectory, "declaration.json");
+
+            // TODO: get from configuration
+            var gitHubAccount = CDorstDevOpsDeclaration.CDorst;
+            var project = gitHubAccount.Account;
+            /*Write hard-coded repository declaration to JSON, then consume JSON below*/
+            var repositoriesDeclaration = CDorstGitHubAccount.GetRepositories();
+            var repositoriesJson = JsonConvert.SerializeObject(repositoriesDeclaration, _jsonSettings);
+            await File.WriteAllTextAsync(path, repositoriesJson);
             try
             {
-
-                var path = args?.FirstOrDefault() ?? Path.Combine(CurrentDirectory, "declaration.json");
-
-                var gitHubAccount = CDorstDevOpsDeclaration.CDorst;
-                var project = gitHubAccount.Project;
-                path = Path.Combine(CurrentDirectory, "cdorst-declaration.json");
-
-                //var declaration = CDorstGitHubAccount.GetRepositories();
-                //var json = JsonConvert.SerializeObject(declaration, jsonSettings);
-                //await File.WriteAllTextAsync(path, json);
-
-                var jsonSettings = new JsonSerializerSettings
-                {
-                    Formatting = Formatting.Indented,
-                    NullValueHandling = NullValueHandling.Ignore,
-                    TypeNameHandling = TypeNameHandling.Auto
-                };
-                var json = await File.ReadAllTextAsync(path);
-                var declaration = JsonConvert.DeserializeObject<List<ICodeGeneratable>>(json, jsonSettings);
-                var repos = declaration.Select(each => new KeyValuePair<string, ITemplate>(each.Name, each.GetDeclaration()));
-                var dictionary = new Dictionary<string, ITemplate>(repos);
-                foreach (var repo in declaration ?? new List<ICodeGeneratable>())
-                {
-                    if (repo is Class)
-                    {
-                        var @class = repo as Class;
-                        project.WithCode(@class.GetDeclaration().GetContent()(dictionary).Code);
-                    }
-                    if (repo is Interface)
-                    {
-                        var @interface = repo as Interface;
-                        project.WithCode(@interface.GetDeclaration().GetContent()(dictionary).Code);
-                    }
-                    if (repo is Metapackage)
-                    {
-                        var package = repo as Metapackage;
-                        project.WithMetapackage(package.GetDeclaration().GetContent()(dictionary).Metapackage);
-                    }
-                    if (repo is StaticFunction)
-                    {
-                        var function = repo as StaticFunction;
-                        project.WithCode(function.GetDeclaration().GetContent()(dictionary).Code);
-                    }
-                }
-
+                project = await GetAccountRepositoriesFromJson(path, project);
                 var account = project.GetGitHubAccountDeclaration();
                 var repositories = account.RepositoryList.GetRecords();
                 RepositoriesFound(repositories.Count());
@@ -81,6 +54,47 @@ namespace ConsoleApp6
                 throw;
             }
         }
+
+        private static async Task<Declarations.Account> GetAccountRepositoriesFromJson(string path, Declarations.Account account)
+        {
+            var declaration = await GetCodeDeclarationFromJson(path);
+            var dictionary = GetRepositoryDictionary(declaration);
+            var accountName = account.AccountName;
+            foreach (var repo in declaration ?? new List<ICodeGeneratable>())
+            {
+                if (repo is Class)
+                {
+                    account = account.WithCode((repo as Class).GetDeclaration().GetContent()(accountName, dictionary).Code);
+                    continue;
+                }
+                if (repo is Interface)
+                {
+                    account = account.WithCode((repo as Interface).GetDeclaration().GetContent()(accountName, dictionary).Code);
+                    continue;
+                }
+                if (repo is Metapackage)
+                {
+                    account = account.WithMetapackage((repo as Metapackage).GetDeclaration().GetContent()(accountName, dictionary).Metapackage);
+                    continue;
+                }
+                if (repo is StaticFunction)
+                {
+                    account = account.WithCode((repo as StaticFunction).GetDeclaration().GetContent()(accountName, dictionary).Code);
+                    continue;
+                }
+            }
+            return account;
+        }
+
+        private static async Task<List<ICodeGeneratable>> GetCodeDeclarationFromJson(string path)
+        {
+            var json = await File.ReadAllTextAsync(path);
+            return JsonConvert.DeserializeObject<List<ICodeGeneratable>>(json, _jsonSettings);
+        }
+
+        private static Dictionary<string, ITemplate> GetRepositoryDictionary(List<ICodeGeneratable> declaration)
+            => new Dictionary<string, ITemplate>(
+                declaration.Select(each => new KeyValuePair<string, ITemplate>(each.Name, each.GetDeclaration())));
 
         private static void Done()
         {
