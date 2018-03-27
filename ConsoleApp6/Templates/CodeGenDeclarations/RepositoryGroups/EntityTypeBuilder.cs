@@ -14,7 +14,9 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations.RepositoryGroups
         private const string GetKey = nameof(GetKey);
         private const string GetKeyComment = "Returns the entity's unique identifier.";
         private const string IEntity = nameof(IEntity);
+        private const string IEntityPackage = "DevOps.Code.Entities.Interfaces.Entity";
         private const string IStaticEntity = nameof(IStaticEntity);
+        private const string IStaticEntityPackage = "DevOps.Code.Entities.Interfaces.StaticEntity";
         private const string Key = nameof(Key);
         private const string Position = nameof(Position);
         private const string PositionKeyExpression = "(1)";
@@ -41,6 +43,16 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations.RepositoryGroups
                 sameAccountDependencies = new List<string>();
             if (!sameAccountDependencies.Contains(AnnotationsPackage))
                 sameAccountDependencies.Add(AnnotationsPackage);
+            if (@static)
+            {
+                if (!sameAccountDependencies.Contains(IStaticEntityPackage))
+                    sameAccountDependencies.Add(IStaticEntityPackage);
+            }
+            else
+            {
+                if (!sameAccountDependencies.Contains(IEntityPackage))
+                    sameAccountDependencies.Add(IEntityPackage);
+            }
             return new Class(@namespace, typeName, description, version, packageReferences, sameAccountDependencies, GetAttributes(tableName, @namespace), GetBases(@static, keyType), GetConstructors(properties), methods: GetMethods(@static, typeName, keyType, properties, entityTypeId), properties: GetProperties(typeName, keyType, properties).ToList(), usingDirectives: GetUsingDirectives(properties));
         }
 

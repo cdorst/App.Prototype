@@ -26,7 +26,6 @@ namespace ConsoleApp6.Templates.Implementation
                     Version = "1.0.7",
                     EntityTypeId = 5,
                     Editable = true,
-                    SameAccountDependencies = new List<string> { "DevOps.Code.Entities.Interfaces.Entity" },
                     Properties = new List<EntityProperty>
                     {
                         new EntityProperty
@@ -42,7 +41,6 @@ namespace ConsoleApp6.Templates.Implementation
                     Description = "Contains the StaticFooBar entity type",
                     Version = "1.0.0",
                     EntityTypeId = 4,
-                    SameAccountDependencies = new List<string> { "DevOps.Code.Entities.Interfaces.StaticEntity" },
                     Properties = new List<EntityProperty>
                     {
                         new EntityProperty
