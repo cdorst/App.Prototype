@@ -7,15 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CDorst.Azure.Storage.Connection.GetConnectionString" Version="4.0.2" />
     <PackageReference Include="CDorst.Common.Functions.ClearDirectory" Version="2.0.0" />
     <PackageReference Include="CDorst.Common.Functions.CreateNewArrayFromSingleElement" Version="1.0.0" />
-    <PackageReference Include="CDorst.DevOps.Primitives.SourceGraph" Version="9.0.3" />
+    <PackageReference Include="CDorst.DevOps.Build.AppVeyor.AddBuild" Version="1.0.2" />
+    <PackageReference Include="CDorst.DevOps.Build.AppVeyor.AddRepositoryVersion" Version="1.0.2" />
+    <PackageReference Include="CDorst.DevOps.Build.AppVeyor.GetBuildRecord" Version="1.0.2" />
+    <PackageReference Include="CDorst.DevOps.Build.AppVeyor.GetRepositoryVersionRecord" Version="2.0.6" />
+    <PackageReference Include="CDorst.DevOps.Primitives.SourceGraph" Version="11.0.3" />
     <PackageReference Include="CDorst.DevOps.VersionControl.Functions.CheckIfGitHubRepositoryExists" Version="2.0.0" />
     <PackageReference Include="CDorst.DevOps.VersionControl.Functions.CreateGitHubRepository" Version="2.0.0" />
     <PackageReference Include="Humanizer.Core" Version="2.2.0" />
     <PackageReference Include="LibGit2Sharp" Version="0.25.0-preview-0081" />
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
 </Project>

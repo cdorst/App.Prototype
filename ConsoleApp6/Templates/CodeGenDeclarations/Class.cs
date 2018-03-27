@@ -17,12 +17,15 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations
             SameAccountDependencies = sameAccountDependencies?.ToList();
             Attributes = attributes;
             Bases = bases;
+            Constructors = constructors;
+            Fields = fields;
             ConstraintClauses = constraintClauses;
             Methods = methods;
             Properties = properties;
             TypeParameters = typeParameters;
             UsingDirectives = usingDirectives;
             UsingStaticDirectives = usingStaticDirectives;
+            FinalizerBlock = finalizerBlock;
         }
 
         public string Description { get; set; }

@@ -4,25 +4,19 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations
 {
     internal static class AgentNounsHelper
     {
-        private static readonly HashSet<string> Suffixes = new HashSet<string>
+        private static readonly HashSet<string> AddTer = new HashSet<string>
         {
-            "er",
-            "ar",
-            "or",
-            "ist"
+            "Get",
+            "Set"
         };
 
-        public static string GetVerb(this string agentNoun)
+        public static string GetAgentNoun(this string verb)
         {
-            var lastThree = agentNoun.Substring(agentNoun.Length - 3, 3);
-            var lastTwo = lastThree.Substring(1);
-            return
-                Suffixes.Contains(lastThree) ? GetVerb(agentNoun, 3)
-                : Suffixes.Contains(lastTwo) ? GetVerb(agentNoun, 2)
-                : agentNoun;
+            if (AddTer.Contains(verb)) return $"{verb}ter";
+            var or = $"{verb}or";
+            return AgentNounDictionary.AgentNounsEndingInOr.Contains(or)
+                ? or
+                : $"{verb}er";
         }
-
-        private static string GetVerb(string agentNoun, byte suffixLength)
-            => agentNoun.Substring(0, agentNoun.Length - suffixLength);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Common.EntityFrameworkServices;
 using DevOps.Primitives.SourceGraph;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using static Common.Functions.ClearDirectory.DirectoryClearer;
 using static ConsoleApp6.AppveyorBuildAdder;
@@ -9,14 +10,17 @@ using static ConsoleApp6.GitPusher;
 using static ConsoleApp6.RepositoryCloneOrInitializer;
 using static ConsoleApp6.RepositoryExistenceChecker;
 using static ConsoleApp6.TempDirectoryGetter;
+using static DevOps.Build.AppVeyor.AddBuild.BuildAdder;
+using static DevOps.Build.AppVeyor.AddRepositoryVersion.RepositoryVersionAdder;
 
 namespace ConsoleApp6
 {
     public static class RepositoryCodeGenerator
     {
         private const string ProjectIndex = "Project.Index";
+        private const string QuoteChar = "\"";
 
-        public static async Task CommitChanges(GitHubAccountSettings account, Repository repository, string password, string appveyorToken)
+        public static async Task CommitChanges(GitHubAccountSettings account, Repository repository, string password, string appveyorToken, HashSet<string> filesToCommit, string dependencies, string fileHashes, string namePrefix)
         {
             var accountName = account.AccountName.Value;
             var repoNameDescription = repository.RepositoryNameDescription;
@@ -25,11 +29,14 @@ namespace ConsoleApp6
             var author = account.GitCommitSettings;
             var authorEmail = author.Email.Value;
             var authorName = author.Name.Value;
+            var version = repository.GetVersion();
 
-            var isNewRepo = await CreateGitHubRepositoryIfNotExists(password, accountName, repositoryName, repositoryDescription);
+            var isNewRepo = await CreateGitHubRepositoryIfNotExists(password, accountName, repositoryName, repositoryDescription.Replace(QuoteChar, string.Empty));
             var repoDirectory = CloneOrInitGitRepository(accountName, repositoryName, isNewRepo);
-            var anyChanges = CommitChanges(repository, authorEmail, authorName, repoDirectory);
+            var anyChanges = CommitChanges(repository, authorEmail, authorName, repoDirectory, filesToCommit);
             if (anyChanges) Push(repoDirectory, isNewRepo, accountName, password);
+            await AddBuildAsync($"{namePrefix}.{repositoryName}", version, dependencies, fileHashes);
+            await AddRepositoryVersionAsync(namePrefix, repositoryName, version);
             await AddBuildForNewProjects(appveyorToken, accountName, repositoryName, isNewRepo);
         }
 
@@ -54,11 +61,14 @@ namespace ConsoleApp6
             return repoDirectory;
         }
 
-        private static bool CommitChanges(Repository repository, string authorEmail, string authorName, string repoDirectory)
+        private static bool CommitChanges(Repository repository, string authorEmail, string authorName, string repoDirectory, HashSet<string> filesToCommit)
         {
+            var allFiles = repository.RepositoryContent.RepositoryFileList.GetRecords();
+            var commitFiles = new List<RepositoryFile>();
+            foreach (var file in allFiles) if (filesToCommit.Contains(file.GetPathRelativeToRepositoryRoot())) commitFiles.Add(file);
             var anyChanges = false;
             using (var repo = new LibGit2Sharp.Repository(repoDirectory))
-                foreach (var file in repository.RepositoryContent.RepositoryFileList.GetRecords())
+                foreach (var file in commitFiles)
                     anyChanges = TryMakeCommit(authorEmail, authorName, repoDirectory, anyChanges, repo, file);
             return anyChanges;
         }
