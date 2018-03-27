@@ -2,24 +2,94 @@
 using ConsoleApp6.Templates.CodeGenDeclarations.RepositoryGroups;
 using ConsoleApp6.Templates.CSharpTypeMembers;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ConsoleApp6.Templates.Implementation
 {
     public static class CDorstGitHubAccount
     {
-        public static List<IRepositoryGroup> GetRepositoryGroups()
-            => new List<IRepositoryGroup>
-            {
 
-            };
+        private static readonly List<ICodeGeneratable> EmptyRepoList = new List<ICodeGeneratable>();
 
         public static List<ICodeGeneratable> GetRepositories()
+            => (GetIndividualRepositories() ?? EmptyRepoList)
+                .Concat(GetRepositoryGroups()?.SelectMany(group => group.GetRepositories()) ?? EmptyRepoList)
+                .ToList();
+
+        private static List<IRepositoryGroup> GetRepositoryGroups()
+            => new List<IRepositoryGroup>
+            {
+                new Entity
+                {
+                    Name = "Entities.FooBars",
+                    Description = "Contains the FooBar entity type",
+                    Version = "1.0.7",
+                    EntityTypeId = 5,
+                    Editable = true,
+                    SameAccountDependencies = new List<string> { "DevOps.Code.Entities.Interfaces.Entity" },
+                    Properties = new List<EntityProperty>
+                    {
+                        new EntityProperty
+                        {
+                            Name = "Baz",
+                            Type = "int"
+                        }
+                    }
+                },
+                new Entity
+                {
+                    Name = "Entities.StaticFooBars",
+                    Description = "Contains the StaticFooBar entity type",
+                    Version = "1.0.0",
+                    EntityTypeId = 4,
+                    SameAccountDependencies = new List<string> { "DevOps.Code.Entities.Interfaces.StaticEntity" },
+                    Properties = new List<EntityProperty>
+                    {
+                        new EntityProperty
+                        {
+                            Name = "Baz",
+                            Type = "int"
+                        }
+                    }
+                }
+            };
+
+        private static List<ICodeGeneratable> GetIndividualRepositories()
             => new List<ICodeGeneratable>
             {
                 new Metapackage(
+                    "Azure.Storage.Metapackage",
+                    "Metapackage for Microsoft Azure Storage dependencies",
+                    "1.0.2", null,
+                    new List<PackageReference>
+                    {
+                        new PackageReference
+                        {
+                            Name = "WindowsAzure.Storage",
+                            Version = "9.1.0"
+                        }
+                    }),
+                new Metapackage(
+                    "DevOps.Code.Entities.Metapackages.Annotations",
+                    "Metapackage for entity data-annotation attributes",
+                    "1.0.0", null,
+                    new List<PackageReference>
+                    {
+                        new PackageReference
+                        {
+                            Name = "protobuf-net",
+                            Version = "2.3.7"
+                        },
+                        new PackageReference
+                        {
+                            Name = "System.ComponentModel.Annotations",
+                            Version = "4.4.1"
+                        }
+                    }),
+                new Metapackage(
                     "DevOps.Code.Entities.Metapackages.EntityFrameworkCore",
                     "Metapackage for EntityFrameworkCore dependencies",
-                    "1.0.0", null,
+                    "1.0.3", null,
                     new List<PackageReference>
                     {
                         new PackageReference
@@ -31,18 +101,18 @@ namespace ConsoleApp6.Templates.Implementation
                 new Interface(
                     "DevOps.Code.Entities.Interfaces.Entity",
                     "Common interface for code-generated entity types",
-                    "1.0.0", typeParameters: new List<string> { "TKey" },
+                    "1.0.2", typeParameters: new List<string> { "TKey" },
                     methods: new List<Method>
                     {
                         new Method
                         {
-                            Comment = "Returns the unqiue identifier of the entity type",
+                            Comment = "Returns the unique identifier of the entity type",
                             Name = "GetEntityType",
                             Type = "int"
                         },
                         new Method
                         {
-                            Comment = "Returns the unqiue identifier of this entity instance",
+                            Comment = "Returns the unique identifier of this entity instance",
                             Name = "GetKey",
                             Type = "TKey"
                         }
@@ -50,7 +120,7 @@ namespace ConsoleApp6.Templates.Implementation
                 new Interface(
                     "DevOps.Code.Entities.Interfaces.StaticEntity",
                     "Common interface for code-generated uneditable entity types",
-                    "1.0.0",
+                    "1.0.3",
                     sameAccountDependencies: new[]
                     {
                         "DevOps.Code.Entities.Interfaces.Entity"
@@ -75,7 +145,7 @@ namespace ConsoleApp6.Templates.Implementation
                     "Azure.Storage.Connection.GetConnectionString",
                     "ConnectionStringGetter",
                     "Function returns the AZURE_STORAGE_CONNECTION_STRING environment variable value",
-                    "4.0.5",
+                    "4.0.8",
                     new List<EnvironmentVariable>
                     {
                         new EnvironmentVariable
@@ -114,15 +184,8 @@ namespace ConsoleApp6.Templates.Implementation
                     "Azure.Storage.Connection.GetCloudStorageAccount",
                     "CloudStorageAccountGetter",
                     "Function returns an instance of Microsoft Azure CloudStorageAccount using the given connection string",
-                    "4.0.5",
-                    externalDependencies: new List<PackageReference>
-                    {
-                        new PackageReference
-                        {
-                            Name = "WindowsAzure.Storage",
-                            Version = "9.1.0"
-                        }
-                    },
+                    "4.0.8",
+                    sameAccountDependencies: new[] { "Azure.Storage.Metapackage" },
                     usingDirectives: new List<string> { "Microsoft.WindowsAzure.Storage" },
                     methods: new List<Method>
                     {
@@ -147,7 +210,7 @@ namespace ConsoleApp6.Templates.Implementation
                     "Azure.Storage.Table.GetTableClient",
                     "TableClientGetter",
                     "Function returns an instance of Microsoft Azure CloudTableClient using the given connection string",
-                    "4.0.5",
+                    "4.0.8",
                     sameAccountDependencies: new[] { "Azure.Storage.Connection.GetCloudStorageAccount" },
                     usingDirectives: new List<string> { "Microsoft.WindowsAzure.Storage.Table" },
                     usingStaticDirectives: new List<string>
@@ -177,7 +240,7 @@ namespace ConsoleApp6.Templates.Implementation
                     "Azure.Storage.Table.GetTableReference",
                     "TableReferenceGetter",
                     "Function returns a reference of a Microsoft Azure CloudTable using the given connection string and table name",
-                    "4.0.5",
+                    "4.0.8",
                     sameAccountDependencies: new[] { "Azure.Storage.Table.GetTableClient" },
                     usingDirectives: new List<string> { "Microsoft.WindowsAzure.Storage.Table" },
                     usingStaticDirectives: new List<string>
@@ -212,7 +275,7 @@ namespace ConsoleApp6.Templates.Implementation
                     "Azure.Storage.Table.GetOrCreateTableReference",
                     "TableReferenceGetterOrCreator",
                     "Function returns a reference of a new or existing Microsoft Azure CloudTable using the given connection string and table name",
-                    "4.0.5",
+                    "4.0.8",
                     sameAccountDependencies: new[] { "Azure.Storage.Table.GetTableReference" },
                     usingDirectives: new List<string>
                     {
@@ -256,7 +319,7 @@ namespace ConsoleApp6.Templates.Implementation
                     "Azure.Storage.Table.GetAzureTable",
                     "AzureTableGetter",
                     "Function returns a reference of a new or existing Microsoft Azure CloudTable using the environment's connection string and given table name",
-                    "4.0.5",
+                    "4.0.8",
                     environmentVariables: new List<EnvironmentVariable>
                     {
                         new EnvironmentVariable
@@ -303,15 +366,8 @@ namespace ConsoleApp6.Templates.Implementation
                     "DevOps.Build.AppVeyor.AzureStorageTableLedger",
                     "AppveyorBuildTable",
                     "Azure Table Storage entity representing a successfully completed AppVeyor build",
-                    "4.0.6",
-                    externalDependencies: new List<PackageReference>
-                    {
-                        new PackageReference
-                        {
-                            Name = "WindowsAzure.Storage",
-                            Version = "9.1.0"
-                        }
-                    },
+                    "4.0.9",
+                    sameAccountDependencies: new[] { "Azure.Storage.Metapackage" },
                     usingDirectives: new List<string> { "Microsoft.WindowsAzure.Storage.Table" },
                     bases: new List<Base>
                     {
@@ -381,7 +437,7 @@ namespace ConsoleApp6.Templates.Implementation
                     "DevOps.Build.AppVeyor.AzureStorageTableLedger.Builder",
                     "AppveyorBuildTableHelper",
                     "Function returns an instance of AppveyorBuildTable",
-                    "4.0.6",
+                    "4.0.9",
                     sameAccountDependencies: new[] { "DevOps.Build.AppVeyor.AzureStorageTableLedger" },
                     methods: new List<Method>
                     {
@@ -423,15 +479,8 @@ namespace ConsoleApp6.Templates.Implementation
                     "DevOps.Build.AppVeyor.AzureStorageTableVersionLedger",
                     "RepositoryVersionTable",
                     "Azure Table Storage entity representing a current repository version",
-                    "1.0.6",
-                    externalDependencies: new List<PackageReference>
-                    {
-                        new PackageReference
-                        {
-                            Name = "WindowsAzure.Storage",
-                            Version = "9.1.0"
-                        }
-                    },
+                    "1.0.9",
+                    sameAccountDependencies: new[] { "Azure.Storage.Metapackage" },
                     usingDirectives: new List<string> { "Microsoft.WindowsAzure.Storage.Table" },
                     bases: new List<Base>
                     {
@@ -486,7 +535,7 @@ namespace ConsoleApp6.Templates.Implementation
                     "DevOps.Build.AppVeyor.AzureStorageTableVersionLedger.Builder",
                     "RepositoryVersionTableHelper",
                     "Function returns an instance of RepositoryVersionTable",
-                    "1.0.6",
+                    "1.0.9",
                     sameAccountDependencies: new[] { "DevOps.Build.AppVeyor.AzureStorageTableVersionLedger" },
                     methods: new List<Method>
                     {
@@ -521,7 +570,7 @@ namespace ConsoleApp6.Templates.Implementation
                     "DevOps.Build.AppVeyor.GetAzureTable",
                     "AzureTableGetter",
                     "Function returns an Azure CloudTable reference for a table named appveyor",
-                    "1.0.6",
+                    "1.0.9",
                     sameAccountDependencies: new[] {
                         "Azure.Storage.Table.GetAzureTable",
                         "DevOps.Build.AppVeyor.AzureStorageTableLedger"
@@ -568,7 +617,7 @@ namespace ConsoleApp6.Templates.Implementation
                     "DevOps.Build.AppVeyor.AddBuild",
                     "BuildAdder",
                     "Function adds the given repository build information to an Azure Storage Table ledger",
-                    "1.0.6",
+                    "1.0.9",
                     sameAccountDependencies: new[] {
                         "DevOps.Build.AppVeyor.GetAzureTable",
                         "DevOps.Build.AppVeyor.AzureStorageTableLedger.Builder"
@@ -637,7 +686,7 @@ namespace ConsoleApp6.Templates.Implementation
                     "DevOps.Build.AppVeyor.GetBuildRecord",
                     "BuildRecordGetter",
                     "Function gets the given repository's build record from the Azure Storage Table AppVeyor build ledger",
-                    "1.0.6",
+                    "1.0.9",
                     sameAccountDependencies: new[] {
                         "DevOps.Build.AppVeyor.GetAzureTable",
                         "DevOps.Build.AppVeyor.AzureStorageTableLedger"
@@ -695,7 +744,7 @@ namespace ConsoleApp6.Templates.Implementation
                     "DevOps.Build.AppVeyor.AddRepositoryVersion",
                     "RepositoryVersionAdder",
                     "Function adds the given repository build information to an Azure Storage Table ledger",
-                    "1.0.6",
+                    "1.0.9",
                     sameAccountDependencies: new[] {
                         "DevOps.Build.AppVeyor.GetAzureTable",
                         "DevOps.Build.AppVeyor.AzureStorageTableVersionLedger.Builder"
@@ -757,7 +806,7 @@ namespace ConsoleApp6.Templates.Implementation
                     "DevOps.Build.AppVeyor.GetRepositoryVersionRecord",
                     "RepositoryVersionRecordGetter",
                     "Function gets the given repository's version record from the Azure Storage Table AppVeyor build ledger",
-                    "2.0.10",
+                    "2.0.13",
                     sameAccountDependencies: new[] {
                         "DevOps.Build.AppVeyor.GetAzureTable",
                         "DevOps.Build.AppVeyor.AzureStorageTableVersionLedger"
@@ -815,15 +864,8 @@ namespace ConsoleApp6.Templates.Implementation
                     "DevOps.Code.Entities.EntityTypeLedger",
                     "EntityTypeTable",
                     "Azure Table Storage entity representing an entity-type",
-                    "1.0.0",
-                    externalDependencies: new List<PackageReference>
-                    {
-                        new PackageReference
-                        {
-                            Name = "WindowsAzure.Storage",
-                            Version = "9.1.0"
-                        }
-                    },
+                    "1.0.3",
+                    sameAccountDependencies: new[] { "Azure.Storage.Metapackage" },
                     usingDirectives: new List<string> { "Microsoft.WindowsAzure.Storage.Table" },
                     bases: new List<Base>
                     {
@@ -878,7 +920,7 @@ namespace ConsoleApp6.Templates.Implementation
                     "DevOps.Code.Entities.EntityTypeLedger.Builder",
                     "EntityTypeTableHelper",
                     "Function returns an instance of EntityTypeTable",
-                    "1.0.0",
+                    "1.0.3",
                     sameAccountDependencies: new[] { "DevOps.Code.Entities.EntityTypeLedger" },
                     methods: new List<Method>
                     {
@@ -913,7 +955,7 @@ namespace ConsoleApp6.Templates.Implementation
                     "DevOps.Code.Entities.GetAzureTable",
                     "AzureTableGetter",
                     "Function returns an Azure CloudTable reference for a table named entities",
-                    "1.0.0",
+                    "1.0.3",
                     sameAccountDependencies: new[] {
                         "Azure.Storage.Table.GetAzureTable",
                         "DevOps.Build.AppVeyor.AzureStorageTableLedger"
@@ -960,7 +1002,7 @@ namespace ConsoleApp6.Templates.Implementation
                     "DevOps.Code.Entities.AddEntityTypeRecord",
                     "EntityTypeRecordAdder",
                     "Function adds the given entity type information to an Azure Storage Table ledger",
-                    "1.0.0",
+                    "1.0.3",
                     sameAccountDependencies: new[] {
                         "DevOps.Code.Entities.GetAzureTable",
                         "DevOps.Code.Entities.EntityTypeLedger.Builder"
@@ -1022,7 +1064,7 @@ namespace ConsoleApp6.Templates.Implementation
                     "DevOps.Code.Entities.GetEntityTypeRecord",
                     "EntityTypeRecordGetter",
                     "Function gets the given entity-type's ID record from the Azure Storage Table entity-types ledger",
-                    "1.0.1",
+                    "1.0.4",
                     sameAccountDependencies: new[] {
                         "DevOps.Code.Entities.GetAzureTable",
                         "DevOps.Code.Entities.EntityTypeLedger"

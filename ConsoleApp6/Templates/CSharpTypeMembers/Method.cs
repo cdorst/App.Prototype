@@ -9,6 +9,7 @@ namespace ConsoleApp6.Templates.CSharpTypeMembers
         {
             ArrowClauseExpression = arrowClauseExpression;
             Comment = comment;
+            Modifiers = "public";
             Name = name;
             Type = type;
         }

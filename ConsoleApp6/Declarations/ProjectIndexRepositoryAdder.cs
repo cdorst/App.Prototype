@@ -19,18 +19,45 @@ namespace ConsoleApp6.Declarations
 
         public static GitHubAccount AddProjectIndexRepository(Account account)
         {
-            var prefix = $"{account.AccountName}.";
+            var accountName = account.AccountName;
+            var prefix = $"{accountName}.";
             var dictionary = BuildDependencyDictionary(account, prefix);
             var dependents = InvertDependencyDictionary(dictionary, prefix);
             // Get declaration
             var declaration = account.GenerateAccount();
+            // Reorder repository list in dependency order
+            declaration.RepositoryList = SortInDependencyOrder(prefix, declaration);
             // Overwrite READMEs to add "Dependents" section
             var modified = ChangeReadmeFiles(prefix, dependents, declaration);
             // Add Project.Index repository
-            modified.Add(ProjectIndexRepository(dictionary));
+            modified.Add(ProjectIndexRepository(accountName, account.AuthorEmail, dictionary));
             // Package & ship declaration object
             declaration.RepositoryList = new RepositoryList(modified.Select(r => new RepositoryListAssociation(r)).ToList());
             return declaration;
+        }
+
+        private static RepositoryList SortInDependencyOrder(string prefix, GitHubAccount declaration)
+        {
+            var repositories = declaration.RepositoryList.GetRecords();
+            var repositoryQueue = new Queue<Repository>(repositories);
+            var repositoriesSorted = new List<Repository>();
+            var workedDependencies = new HashSet<string>();
+            while (repositoryQueue.Any())
+            {
+                var repo = repositoryQueue.Dequeue();
+                var dependencies = repo.RepositoryContent.SameAccountPackageDependencyList?.GetRecords().Select(r => r.Value);
+                var worked = dependencies?.All(d => workedDependencies.Contains(d)) ?? true;
+                if (worked) // dependencies are already added
+                {
+                    repositoriesSorted.Add(repo);
+                    workedDependencies.Add($"{prefix}{repo.GetName()}");
+                }
+                else
+                {
+                    repositoryQueue.Enqueue(repo);
+                }
+            }
+            return new RepositoryList(repositoriesSorted.Select(r => new RepositoryListAssociation(r)).ToList());
         }
 
         private static Dictionary<string, IEnumerable<string>> BuildDependencyDictionary(Account account, string prefix)
