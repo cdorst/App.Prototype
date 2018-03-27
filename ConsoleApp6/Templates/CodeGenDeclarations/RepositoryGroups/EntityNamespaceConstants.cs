@@ -3,6 +3,7 @@
     internal static class EntityNamespaceConstants
     {
         public const string DevOpsCodeEntitiesInterfacesEntity = "DevOps.Code.Entities.Interfaces.Entity";
+        public const string DevOpsCodeEntitiesInterfacesStaticEntity = "DevOps.Code.Entities.Interfaces.StaticEntity";
         public const string ProtoBufPosition = "Position = ProtoBuf.ProtoMemberAttribute";
         public const string ProtoBufSerializable = "ProtoBufSerializable = ProtoBuf.ProtoContractAttribute";
         public const string System = nameof(System);

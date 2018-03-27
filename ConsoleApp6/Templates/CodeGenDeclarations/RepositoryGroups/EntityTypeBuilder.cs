@@ -13,6 +13,8 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations.RepositoryGroups
         private const string GetEntityTypeIdComment = "Returns a value that uniquely identifies this entity type. Each entity type in the model has a unique identifier.";
         private const string GetKey = nameof(GetKey);
         private const string GetKeyComment = "Returns the entity's unique identifier.";
+        private const string GetUniqueIndex = nameof(GetUniqueIndex);
+        private const string GetUniqueIndexComment = "Returns an expression defining this entity's unique index (alternate key)";
         private const string IEntity = nameof(IEntity);
         private const string IEntityPackage = "DevOps.Code.Entities.Interfaces.Entity";
         private const string IStaticEntity = nameof(IStaticEntity);
@@ -39,21 +41,27 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations.RepositoryGroups
         public static Class Build(string @namespace, string typeName, string description, string version, string tableName, List<PackageReference> packageReferences, List<string> sameAccountDependencies, string keyType, List<EntityProperty> properties, bool @static, int entityTypeId)
         {
             if (string.IsNullOrWhiteSpace(keyType)) keyType = TypeConstants.Int;
-            if (sameAccountDependencies == null)
-                sameAccountDependencies = new List<string>();
-            if (!sameAccountDependencies.Contains(AnnotationsPackage))
-                sameAccountDependencies.Add(AnnotationsPackage);
+            sameAccountDependencies = BuildSameAccountDependencyList(sameAccountDependencies, @static);
+            return new Class(@namespace, typeName, description, version, packageReferences, sameAccountDependencies, GetAttributes(tableName, @namespace), GetBases(@static, keyType, typeName), GetConstructors(properties), methods: GetMethods(@static, typeName, keyType, properties, entityTypeId), properties: GetProperties(typeName, keyType, properties).ToList(), usingDirectives: GetUsingDirectives(properties, @static));
+        }
+
+        private static List<string> BuildSameAccountDependencyList(List<string> dependencies, bool @static)
+        {
+            if (dependencies == null)
+                dependencies = new List<string>();
+            if (!dependencies.Contains(AnnotationsPackage))
+                dependencies.Add(AnnotationsPackage);
             if (@static)
             {
-                if (!sameAccountDependencies.Contains(IStaticEntityPackage))
-                    sameAccountDependencies.Add(IStaticEntityPackage);
+                if (!dependencies.Contains(IStaticEntityPackage))
+                    dependencies.Add(IStaticEntityPackage);
             }
             else
             {
-                if (!sameAccountDependencies.Contains(IEntityPackage))
-                    sameAccountDependencies.Add(IEntityPackage);
+                if (!dependencies.Contains(IEntityPackage))
+                    dependencies.Add(IEntityPackage);
             }
-            return new Class(@namespace, typeName, description, version, packageReferences, sameAccountDependencies, GetAttributes(tableName, @namespace), GetBases(@static, keyType), GetConstructors(properties), methods: GetMethods(@static, typeName, keyType, properties, entityTypeId), properties: GetProperties(typeName, keyType, properties).ToList(), usingDirectives: GetUsingDirectives(properties));
+            return dependencies;
         }
 
         private static List<Attribute> GetAttributes(string tableName, string @namespace)
@@ -64,10 +72,12 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations.RepositoryGroups
                     $"(\"{tableName}\", Schema = \"{@namespace.Replace(dot, string.Empty)}\")")
             };
 
-        private static List<Base> GetBases(bool @static, string keyType)
+        private static List<Base> GetBases(bool @static, string keyType, string typeName)
             => new List<Base>
             {
-                new Base(@static ? IStaticEntity : IEntity, keyType)
+                @static
+                    ? new Base(IStaticEntity, typeName, keyType)
+                    : new Base(IEntity, keyType)
             };
 
         private static List<Constructor> GetConstructors(List<EntityProperty> properties)
@@ -105,6 +115,9 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations.RepositoryGroups
             if (@static)
             {
 
+                var uniqueProperties = properties.Select(p => string.IsNullOrEmpty(p.ForeignKeyType) ? p.Name : $"{p.Name}Id");
+                var uniquePropertyString = string.Join(", entity.", uniqueProperties);
+                methods.Add(new Method(GetUniqueIndex, $"Expression<Func<{typeName}, object>>", GetUniqueIndexComment, $"entity => new {{ entity.{uniquePropertyString} }}"));
             }
             return methods;
         }
@@ -141,13 +154,20 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations.RepositoryGroups
                 new Attribute(Position, $"({protobufPosition})")
             };
 
-        private static List<string> GetUsingDirectives(List<EntityProperty> properties)
+        private static List<string> GetUsingDirectives(List<EntityProperty> properties, bool @static)
         {
             var usings = new HashSet<string>(properties
                 .Where(PropertyHasTypeNamespace)
                 .Select(PropertyTypeNamespace)
                 .Distinct());
-            usings.Add(EntityNamespaceConstants.DevOpsCodeEntitiesInterfacesEntity);
+            if (@static)
+            {
+                usings.Add(EntityNamespaceConstants.DevOpsCodeEntitiesInterfacesStaticEntity);
+            }
+            else
+            {
+                usings.Add(EntityNamespaceConstants.DevOpsCodeEntitiesInterfacesEntity);
+            }
             usings.Add(EntityNamespaceConstants.ProtoBufPosition);
             usings.Add(EntityNamespaceConstants.ProtoBufSerializable);
             usings.Add(EntityNamespaceConstants.System);

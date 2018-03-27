@@ -39,7 +39,7 @@ namespace ConsoleApp6.Templates.Implementation
                 {
                     Name = "Entities.StaticFooBars",
                     Description = "Contains the StaticFooBar entity type",
-                    Version = "1.0.0",
+                    Version = "1.0.3",
                     EntityTypeId = 4,
                     Properties = new List<EntityProperty>
                     {
@@ -47,7 +47,13 @@ namespace ConsoleApp6.Templates.Implementation
                         {
                             Name = "Baz",
                             Type = "int"
-                        }
+                        },
+                        new EntityProperty
+                        {
+                            Name = "Qux",
+                            Type = "DateTimeOffset",
+                            TypeNamespace = "System"
+                        },
                     }
                 }
             };
