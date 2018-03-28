@@ -23,7 +23,7 @@ namespace ConsoleApp6.Templates.Implementation
                 {
                     Name = "Entities.FooBars",
                     Description = "Contains the FooBar entity type",
-                    Version = "1.0.7",
+                    Version = "1.0.9",
                     EntityTypeId = 5,
                     Editable = true,
                     Properties = new List<EntityProperty>
@@ -39,7 +39,7 @@ namespace ConsoleApp6.Templates.Implementation
                 {
                     Name = "Entities.StaticFooBars",
                     Description = "Contains the StaticFooBar entity type",
-                    Version = "1.0.3",
+                    Version = "1.0.7",
                     EntityTypeId = 4,
                     Properties = new List<EntityProperty>
                     {
@@ -54,6 +54,16 @@ namespace ConsoleApp6.Templates.Implementation
                             Type = "DateTimeOffset",
                             TypeNamespace = "System"
                         },
+                        new EntityProperty
+                        {
+                            Name = "Thing",
+                            Type = "string"
+                        },
+                        new EntityProperty
+                        {
+                            Name = "OtherThing",
+                            Type = "string"
+                        }
                     }
                 }
             };
