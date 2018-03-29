@@ -112,6 +112,7 @@ namespace ConsoleApp6.Declarations
 
         private static RepositoryFile EditReadmeFile(string prefix, IEnumerable<string> dependents, RepositoryFile file)
         {
+            if (prefix.EndsWith('.')) prefix = prefix.Substring(0, prefix.Length - 1);
             var fileName = file.FileName;
             if (fileName.Name.Value == ReadmeFileName && !(fileName.PathParts?.GetAssociations()?.Any() ?? false)) // root README.md file
             {
@@ -126,7 +127,7 @@ namespace ConsoleApp6.Declarations
                     .AppendLine("---- | ------");
                 foreach (var dependent in dependents)
                 {
-                    var dependentRepoName = dependent.Substring(prefix.Length);
+                    var dependentRepoName = dependent.Substring(prefix.Length + 1);
                     injectContent.AppendLine($"[{dependentRepoName}](https://github.com/{prefix}/{dependentRepoName}) | {GetBadges(prefix, dependentRepoName)}");
                 }
                 injectContent.AppendLine();
