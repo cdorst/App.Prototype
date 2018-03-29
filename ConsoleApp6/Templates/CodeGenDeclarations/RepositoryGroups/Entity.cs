@@ -21,15 +21,11 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations.RepositoryGroups
 
         public IEnumerable<ICodeGeneratable> GetRepositories()
         {
-            if (!string.IsNullOrEmpty(DependsOn))
-            {
-                if (SameAccountDependencies == null) SameAccountDependencies = new List<string>();
-                if (!SameAccountDependencies.Contains(DependsOn)) SameAccountDependencies.Add(DependsOn);
-            }
-
             var tableName = Name.Split('.').Last(); // Foo.Bars => Bars
             var typeName = tableName.Singularize(); // Bars => Bar
-            yield return EntityTypeBuilder.Build(Name, typeName, Description, Version, tableName, PackageReferences, SameAccountDependencies, KeyType, Properties, @static: !(Editable ?? false), EntityTypeId);
+            var @static = !(Editable ?? false);
+            yield return EntityTypeBuilder.Build(Name, typeName, Description, Version, tableName, PackageReferences, SameAccountDependencies, KeyType, Properties, @static, EntityTypeId);
+            yield return EntityDbContextBuilder.Build(Name, typeName, Version, tableName, @static, DependsOn);
         }
     }
 }

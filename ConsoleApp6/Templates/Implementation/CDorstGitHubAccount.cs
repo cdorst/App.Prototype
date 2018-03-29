@@ -23,7 +23,7 @@ namespace ConsoleApp6.Templates.Implementation
                 {
                     Name = "Entities.FooBars",
                     Description = "Contains the FooBar entity type",
-                    Version = "1.0.10",
+                    Version = "1.0.13",
                     EntityTypeId = 5,
                     Editable = true,
                     Properties = new List<EntityProperty>
@@ -38,8 +38,9 @@ namespace ConsoleApp6.Templates.Implementation
                 new Entity
                 {
                     Name = "Entities.StaticFooBars",
+                    DependsOn = "Entities.FooBars",
                     Description = "Contains the StaticFooBar entity type",
-                    Version = "1.0.10",
+                    Version = "1.0.13",
                     EntityTypeId = 4,
                     Properties = new List<EntityProperty>
                     {
