@@ -7,14 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CDorst.Azure.Storage.Connection.GetConnectionString" Version="4.0.8" />
+    <PackageReference Include="CDorst.Azure.Storage.Connection.GetConnectionString" Version="4.0.9" />
     <PackageReference Include="CDorst.Common.Functions.ClearDirectory" Version="2.0.0" />
     <PackageReference Include="CDorst.Common.Functions.CreateNewArrayFromSingleElement" Version="1.0.0" />
-    <PackageReference Include="CDorst.DevOps.Build.AppVeyor.AddBuild" Version="1.0.9" />
-    <PackageReference Include="CDorst.DevOps.Build.AppVeyor.AddRepositoryVersion" Version="1.0.9" />
-    <PackageReference Include="CDorst.DevOps.Build.AppVeyor.GetBuildRecord" Version="1.0.9" />
-    <PackageReference Include="CDorst.DevOps.Build.AppVeyor.GetRepositoryVersionRecord" Version="2.0.13" />
-    <PackageReference Include="CDorst.DevOps.Primitives.SourceGraph" Version="12.0.2" />
+    <PackageReference Include="CDorst.DevOps.Build.AppVeyor.AddBuild" Version="1.0.10" />
+    <PackageReference Include="CDorst.DevOps.Build.AppVeyor.AddRepositoryVersion" Version="1.0.10" />
+    <PackageReference Include="CDorst.DevOps.Build.AppVeyor.GetBuildRecord" Version="1.0.10" />
+    <PackageReference Include="CDorst.DevOps.Build.AppVeyor.GetRepositoryVersionRecord" Version="2.0.14" />
+    <PackageReference Include="CDorst.DevOps.Primitives.SourceGraph" Version="12.0.3" />
     <PackageReference Include="CDorst.DevOps.VersionControl.Functions.CheckIfGitHubRepositoryExists" Version="2.0.0" />
     <PackageReference Include="CDorst.DevOps.VersionControl.Functions.CreateGitHubRepository" Version="2.0.0" />
     <PackageReference Include="Humanizer.Core" Version="2.2.0" />

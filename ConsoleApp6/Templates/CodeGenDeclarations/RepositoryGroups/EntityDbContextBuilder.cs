@@ -13,8 +13,11 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations.RepositoryGroups
         public static Class Build(string entityNamespace, string entityTypeName, string version, string tableName, bool @static, string dependsOn)
         {
             var typeName = $"{entityTypeName}DbContext";
-            return new Class(GetDbContextName(entityNamespace), typeName, $"EntityFrameworkCore database context for {entityTypeName} entities", version, sameAccountDependencies: GetSameAccountDependencies(entityNamespace, dependsOn), bases: GetBases(dependsOn), constructors: GetConstructors(typeName), methods: GetMethods(entityTypeName, @static), properties: GetProperties(entityTypeName, tableName), usingDirectives: GetUsings(dependsOn));
+            return new Class(GetDbContextNamespace(entityNamespace), typeName, $"EntityFrameworkCore database context for {entityTypeName} entities", version, sameAccountDependencies: GetSameAccountDependencies(entityNamespace, dependsOn), bases: GetBases(dependsOn), constructors: GetConstructors(typeName), methods: GetMethods(entityTypeName, @static), properties: GetProperties(entityTypeName, tableName), usingDirectives: GetUsings(dependsOn));
         }
+
+        internal static string GetDbContextNamespace(string entityNamespace)
+            => $"{entityNamespace}.DatabaseContext";
 
         private static List<Base> GetBases(string dependsOn)
             => new List<Base>
@@ -39,9 +42,6 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations.RepositoryGroups
                     }
                 }
             };
-
-        private static string GetDbContextName(string entityNamespace)
-            => $"{entityNamespace}.DatabaseContext";
 
         private static List<Method> GetMethods(string entityTypeName, bool @static)
             => !@static ? null : new List<Method>
@@ -76,7 +76,7 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations.RepositoryGroups
             if (string.IsNullOrEmpty(dependsOn))
                 yield return EntityNamespaceConstants.DevOpsCodeEntitiesMetapackagesEntityFrameworkCore;
             else
-                yield return GetDbContextName(dependsOn);
+                yield return GetDbContextNamespace(dependsOn);
         }
 
         private static List<string> GetUsings(string dependsOn)
@@ -87,7 +87,7 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations.RepositoryGroups
             };
             if (!string.IsNullOrEmpty(dependsOn))
             {
-                usings.Add(GetDbContextName(dependsOn));
+                usings.Add(GetDbContextNamespace(dependsOn));
             }
             return usings;
         }

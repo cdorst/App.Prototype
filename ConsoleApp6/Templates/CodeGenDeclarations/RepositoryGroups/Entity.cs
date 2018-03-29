@@ -1,4 +1,5 @@
 ﻿using ConsoleApp6.Templates.CSharpTypeMembers;
+using DevOps.Primitives.CSharp.Helpers.Common;
 using Humanizer;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +24,11 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations.RepositoryGroups
         {
             var tableName = Name.Split('.').Last(); // Foo.Bars => Bars
             var typeName = tableName.Singularize(); // Bars => Bar
+            if (string.IsNullOrWhiteSpace(KeyType)) KeyType = TypeConstants.Int;
             var @static = !(Editable ?? false);
             yield return EntityTypeBuilder.Build(Name, typeName, Description, Version, tableName, PackageReferences, SameAccountDependencies, KeyType, Properties, @static, EntityTypeId);
             yield return EntityDbContextBuilder.Build(Name, typeName, Version, tableName, @static, DependsOn);
+            yield return EntityApiControllerBuilder.Build(Name, typeName, Version, KeyType, tableName, @static);
         }
     }
 }
