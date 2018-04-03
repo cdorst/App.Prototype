@@ -8,7 +8,6 @@ namespace ConsoleApp6.Templates.Implementation
 {
     public static class CDorstGitHubAccount
     {
-
         private static readonly List<ICodeGeneratable> EmptyRepoList = new List<ICodeGeneratable>();
 
         public static List<ICodeGeneratable> GetRepositories()
@@ -23,7 +22,7 @@ namespace ConsoleApp6.Templates.Implementation
                 {
                     Name = "Addresses.States",
                     Description = "Contains US State component of addresses",
-                    Version = "1.0.1",
+                    Version = "1.0.2",
                     EntityTypeId = 1,
                     Properties = new List<EntityProperty>
                     {
@@ -44,7 +43,7 @@ namespace ConsoleApp6.Templates.Implementation
                     Name = "Addresses.ZipCodes",
                     DependsOn = "Addresses.States",
                     Description = "Contains US ZIP Plus4 component of addresses",
-                    Version = "1.0.1",
+                    Version = "1.0.2",
                     EntityTypeId = 2,
                     Properties = new List<EntityProperty>
                     {
@@ -65,7 +64,7 @@ namespace ConsoleApp6.Templates.Implementation
                     Name = "Addresses.StreetAddressLines",
                     DependsOn = "Addresses.ZipCodes",
                     Description = "Contains street address line information",
-                    Version = "1.0.1",
+                    Version = "1.0.2",
                     EntityTypeId = 3,
                     Properties = new List<EntityProperty>
                     {
@@ -81,7 +80,7 @@ namespace ConsoleApp6.Templates.Implementation
                     Name = "Addresses.StreetAddresses",
                     DependsOn = "Addresses.StreetAddressLines",
                     Description = "Contains street address line information",
-                    Version = "1.0.1",
+                    Version = "1.0.2",
                     EntityTypeId = 7,
                     Properties = new List<EntityProperty>
                     {
@@ -106,7 +105,7 @@ namespace ConsoleApp6.Templates.Implementation
                     Name = "Addresses.Cities",
                     DependsOn = "Addresses.StreetAddresses",
                     Description = "Contains US City component of addresses",
-                    Version = "1.0.1",
+                    Version = "1.0.2",
                     EntityTypeId = 8,
                     Properties = new List<EntityProperty>
                     {
@@ -122,7 +121,7 @@ namespace ConsoleApp6.Templates.Implementation
                     Name = "Addresses.StateCities",
                     DependsOn = "Addresses.Cities",
                     Description = "Contains US State-City pair component of addresses",
-                    Version = "1.0.1",
+                    Version = "1.0.2",
                     EntityTypeId = 9,
                     Properties = new List<EntityProperty>
                     {
@@ -147,7 +146,7 @@ namespace ConsoleApp6.Templates.Implementation
                     Name = "Addresses.StateCityZips",
                     DependsOn = "Addresses.StateCities",
                     Description = "Contains US State-City-ZIP group component of addresses",
-                    Version = "1.0.1",
+                    Version = "1.0.2",
                     EntityTypeId = 10,
                     Properties = new List<EntityProperty>
                     {
@@ -172,7 +171,7 @@ namespace ConsoleApp6.Templates.Implementation
                     Name = "Addresses.Addresses",
                     DependsOn = "Addresses.StateCityZips",
                     Description = "Contains US addresses",
-                    Version = "1.0.1",
+                    Version = "1.0.2",
                     EntityTypeId = 11,
                     Properties = new List<EntityProperty>
                     {
@@ -196,7 +195,7 @@ namespace ConsoleApp6.Templates.Implementation
                 {
                     Name = "Entities.FooBars",
                     Description = "Contains the FooBar entity type",
-                    Version = "1.0.18",
+                    Version = "1.0.19",
                     EntityTypeId = 5,
                     Editable = true,
                     Properties = new List<EntityProperty>
@@ -213,7 +212,7 @@ namespace ConsoleApp6.Templates.Implementation
                     Name = "Entities.StaticFooBars",
                     DependsOn = "Entities.FooBars",
                     Description = "Contains the StaticFooBar entity type",
-                    Version = "1.0.16",
+                    Version = "1.0.17",
                     EntityTypeId = 4,
                     Properties = new List<EntityProperty>
                     {
@@ -959,7 +958,7 @@ namespace ConsoleApp6.Templates.Implementation
                 new Interface(
                     "DevOps.Code.Entities.Interfaces.StaticEntity",
                     "Common interface for code-generated uneditable entity types",
-                    "1.0.5",
+                    "1.0.6",
                     sameAccountDependencies: new[]
                     {
                         "DevOps.Code.Entities.Interfaces.Entity"
@@ -970,6 +969,7 @@ namespace ConsoleApp6.Templates.Implementation
                         "System",
                         "System.Linq.Expressions"
                     },
+                    bases: new List<Base> { new Base("IEntity", "TKey") },
                     typeParameters: new List<string> { "TEntity", "TKey" },
                     constraintClauses: new List<ConstraintClause>
                     {
