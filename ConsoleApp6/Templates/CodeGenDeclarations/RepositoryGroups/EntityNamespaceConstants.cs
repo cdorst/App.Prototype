@@ -7,6 +7,7 @@
         public const string DevOpsCodeEntitiesInterfacesEntity = "DevOps.Code.Entities.Interfaces.Entity";
         public const string DevOpsCodeEntitiesInterfacesStaticEntity = "DevOps.Code.Entities.Interfaces.StaticEntity";
         public const string DevOpsCodeEntitiesMetapackagesEntityFrameworkCore = "DevOps.Code.Entities.Metapackages.EntityFrameworkCore";
+        public const string MicrosoftAspNetCoreJsonPatch = "Microsoft.AspNetCore.JsonPatch";
         public const string MicrosoftAspNetCoreMvc = "Microsoft.AspNetCore.Mvc";
         public const string MicrosoftEntityFrameworkCore = "Microsoft.EntityFrameworkCore";
         public const string MicrosoftExtensionsLogging = "Microsoft.Extensions.Logging";

@@ -229,6 +229,7 @@ namespace ConsoleApp6.Templates.CodeGenDeclarations.RepositoryGroups
             {
                 EntityDbContextBuilder.GetDbContextNamespace(entityNamespace),
                 EntityNamespaceConstants.DevOpsCodeDataAccessInterfacesRepository,
+                EntityNamespaceConstants.MicrosoftAspNetCoreJsonPatch,
                 EntityNamespaceConstants.MicrosoftAspNetCoreMvc,
                 EntityNamespaceConstants.MicrosoftExtensionsLogging,
                 EntityNamespaceConstants.SystemThreadingTasks
